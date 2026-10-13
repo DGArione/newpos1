@@ -46,7 +46,53 @@ async function load() {
     renderShiftRoster(details.shiftRoster);
     renderStationPerf(details.stationPerformance);
     renderAuditTrail(details.auditTrail);
+    renderTodayInsights();
   } catch (e) { console.warn("Dashboard load error:", e); }
+}
+
+// ── Today's top sellers + hourly pacing (extra insight cards) ───
+function _fmtHr(h) { const ap = h < 12 ? "am" : "pm"; const hh = h % 12 === 0 ? 12 : h % 12; return hh + ap; }
+async function renderTodayInsights() {
+  const today = new Date().toISOString().slice(0, 10);
+  const tomo = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  const c = posCurrency();
+  try {
+    const r = await api(`/api/analytics/items?from=${today}&to=${tomo}`);
+    if (r.ok) {
+      const items = ((await r.json()).items || []).slice(0, 6);
+      const el = document.getElementById("topSellersToday");
+      if (el) el.innerHTML = items.length ? items.map((it, i) => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 18px;${i ? "border-top:1px dashed var(--border-soft);" : ""}">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${i + 1}</span>
+          <span style="flex:1;font-size:13px;">${it.name}</span>
+          <span style="font-size:12px;color:var(--muted);">×${it.totalQty ?? it.qty ?? 0}</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:var(--accent);min-width:88px;text-align:right;">${c}${(it.totalRevenue ?? it.revenue ?? 0).toFixed(2)}</span>
+        </div>`).join("") : `<div style="padding:26px;text-align:center;color:var(--muted);font-size:13px;">No sales yet today.</div>`;
+    }
+  } catch (e) { /* ignore */ }
+  try {
+    const r = await api(`/api/reports/advanced?from=${today}&to=${tomo}`);
+    if (r.ok) {
+      const d = await r.json();
+      const hourly = d.hourly || [];
+      const active = hourly.filter((h) => h.orders > 0);
+      const from = active.length ? Math.max(0, Math.min(...active.map((h) => h.hour)) - 1) : 7;
+      const to = active.length ? Math.min(23, Math.max(...active.map((h) => h.hour)) + 1) : 21;
+      const slice = hourly.slice(from, to + 1);
+      const max = Math.max(1, ...slice.map((h) => h.revenue));
+      const ph = d.peakHour;
+      const sub = document.getElementById("peakHourSub");
+      if (sub) sub.textContent = ph && ph.orders > 0 ? `Peak ${_fmtHr(ph.hour)} · ${ph.orders} order${ph.orders === 1 ? "" : "s"}` : "When the orders come in";
+      const el = document.getElementById("hourlyToday");
+      if (el) el.innerHTML = active.length ? `
+        <div style="display:flex;align-items:flex-end;gap:3px;height:118px;padding:0 2px;">
+          ${slice.map((h) => `<div title="${_fmtHr(h.hour)} — ${c}${h.revenue.toFixed(0)}" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div style="width:100%;border-radius:4px 4px 0 0;background:${h.orders > 0 ? "var(--accent)" : "var(--border-soft)"};height:${Math.max(3, (h.revenue / max) * 100)}%;"></div></div>`).join("")}
+        </div>
+        <div style="display:flex;gap:3px;padding:5px 2px 0;">
+          ${slice.map((h) => `<div style="flex:1;text-align:center;font-size:8px;color:var(--muted);">${h.hour % 3 === 0 ? _fmtHr(h.hour) : ""}</div>`).join("")}
+        </div>` : `<div style="padding:34px;text-align:center;color:var(--muted);font-size:13px;">No orders yet today.</div>`;
+    }
+  } catch (e) { /* ignore */ }
 }
 
 // ── KPI tiles ────────────────────────────────────────────────

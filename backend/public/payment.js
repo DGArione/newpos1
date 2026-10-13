@@ -83,7 +83,7 @@ function render(orders) {
     const row = document.createElement("button");
     row.className = "card clickable pay-row";
     row.dataset.ordIdx = idx;
-    row.style = "text-align:left; padding:15px 18px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border); background:white; width:100%;";
+    row.style = "text-align:left; padding:15px 18px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border); background:var(--panel); width:100%; border-radius:12px;";
     const balance = (order.grandTotal || order.total) - order.amountPaid;
     // Takeaway/delivery orders show the customer's name — or "no name" when the
     // server flagged it as takeaway without typing one.

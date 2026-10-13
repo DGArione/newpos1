@@ -16,7 +16,9 @@ export default function PettyCashPage() {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const load = () => apiGet<Entry[]>("/petty-cash").then((d) => setList(Array.isArray(d) ? d : [])).catch(() => {}).finally(() => setLoading(false));
+  const load = () => apiGet<Entry[] | { entries: Entry[] }>("/petty-cash")
+    .then((d) => setList(Array.isArray(d) ? d : (d?.entries || [])))
+    .catch(() => {}).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
 
   const balance = list.reduce((s, e) => s + (e.type === "in" ? e.amount : -e.amount), 0);

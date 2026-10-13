@@ -188,6 +188,7 @@ const PAGE_SCRIPTS = {
 
 const _pageCache = new Map();
 let _spaCurrentScript = null;
+let _spaCurrentStyles = [];
 let _navigating = false;
 let _navVersion = 0;
 
@@ -261,6 +262,23 @@ async function spaNavigate(href, pushState = true) {
     if (!newBody) { window.location.href = href; return; }
 
     document.title = doc.title;
+
+    // Inject the target page's own <head> styles. Page-specific CSS lives in a
+    // <style> block in each page's <head>; without copying it across on SPA
+    // navigation, pages (e.g. the dashboard) render unstyled. The shared
+    // style.css is already loaded, so skip it.
+    _spaCurrentStyles.forEach((el) => el.remove());
+    _spaCurrentStyles = [];
+    doc.head.querySelectorAll('style, link[rel="stylesheet"]').forEach((node) => {
+      if (node.tagName === "LINK") {
+        const href = node.getAttribute("href") || "";
+        if (/(^|\/)style\.css(\?|$)/.test(href)) return;
+      }
+      const clone = node.cloneNode(true);
+      clone.setAttribute("data-spa-style", "1");
+      document.head.appendChild(clone);
+      _spaCurrentStyles.push(clone);
+    });
 
     const oldToast = document.getElementById("toast");
     const newToast = doc.getElementById("toast");

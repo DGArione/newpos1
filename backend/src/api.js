@@ -2437,12 +2437,24 @@ function handle(ctx) {
   // ── PETTY CASH ───────────────────────────────────────────
   if (method === 'GET' && uri === '/petty-cash') {
     const st = db.prepare('SELECT * FROM petty_cash WHERE branchId=? ORDER BY createdAt DESC'); st.execute([bid]);
-    jsonOut(st.fetchAll().map((r) => Object.assign({}, r, { id: int(r.id), amount: flt(r.amount) })));
+    const rows = st.fetchAll();
+    let balance = 0;
+    const entries = rows.map((r) => {
+      const amt = flt(r.amount);
+      balance += (r.type === 'in' ? amt : -amt);
+      return {
+        id: int(r.id), type: r.type, amount: amt,
+        reason: r.description || '', description: r.description || '',
+        recordedBy: r.staffName || '', staffName: r.staffName || '',
+        createdAt: r.createdAt,
+      };
+    });
+    jsonOut({ entries, balance: round2(balance) });
   }
   if (method === 'POST' && uri === '/petty-cash') {
     requireRole(['superManager', 'manager'], user);
     db.prepare('INSERT INTO petty_cash (branchId,type,amount,description,staffName) VALUES (?,?,?,?,?)')
-      .execute([bid, body.type || 'out', flt(body.amount || 0), truncate(body.description || '', 1000), user.name]);
+      .execute([bid, body.type || 'out', flt(body.amount || 0), truncate(body.reason || body.description || '', 1000), user.name]);
     jsonOut({ ok: true }, 201);
   }
 
