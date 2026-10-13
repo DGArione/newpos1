@@ -1,7 +1,7 @@
 /* style.css — shared design system for the whole POS.
    Change the tokens below to restyle every screen at once. */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Yellowtail&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Oswald:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Yellowtail&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
   /* Golden Beach — vintage coastal: olive green + kraft paper, terracotta accents.
@@ -78,7 +78,7 @@ body {
   line-height: 1.5;
 }
 
-h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; letter-spacing: -0.01em; }
+h1, h2, h3 { font-family: "Caveat", "Segoe Script", cursive; font-weight: 700; letter-spacing: 0; }
 
 .mono { font-family: "JetBrains Mono", "SF Mono", "Courier New", monospace; font-feature-settings: "tnum" 1; }
 
@@ -811,3 +811,108 @@ tbody tr:hover td { background: color-mix(in srgb, var(--neutral-bg) 55%, transp
 
 /* Keyboard key hint */
 kbd { font-family:"JetBrains Mono",monospace; font-size:11px; background:var(--neutral-bg); border:1px solid var(--border); border-radius:5px; padding:1px 5px; margin:0 1px; }
+
+/* =====================================================================
+   HANDCRAFTED CAFÉ LAYER — Golden Beach
+   Makes the POS feel like the restaurant's own menu board: kraft-paper
+   grain, a chalkboard sidebar, hand-marker headings, dashed menu leaders
+   and tactile, pressable buttons. Loaded last so it restyles every screen.
+   ===================================================================== */
+
+:root {
+  --chalk-bg:   #2c3420;
+  --chalk-bg2:  #333c26;
+  --chalk-text: #ece4cd;
+  --chalk-muted:#a9ad8c;
+  --chalk-line: rgba(236,228,205,.14);
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+/* ---- Kraft-paper grain across the whole app ---- */
+body {
+  background-color: var(--bg);
+  background-image: var(--paper-grain);
+  background-size: 180px 180px;
+  background-attachment: fixed;
+  background-blend-mode: multiply;
+}
+
+/* ---- Hand-marker headings ---- */
+h1, h2, h3 { font-family:"Caveat","Segoe Script",cursive; font-weight:700; }
+.page-header h2 { font-size: 34px; line-height: 1.02; letter-spacing: 0; position: relative; display: inline-block; }
+.page-header h2::after {
+  content:""; position:absolute; left:2px; right:2px; bottom:-7px; height:8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='8' viewBox='0 0 120 8'%3E%3Cpath d='M2 5 Q 18 1 36 5 T 72 5 T 118 4' stroke='%23b06a38' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x;
+  background-size: 120px 8px; opacity: .85;
+}
+.page-header .subtitle { font-style: italic; }
+
+/* Menu-board section labels (the printed "SANDWICHES …… PRICE" rhythm) */
+.nav-section-label, th, .table th, thead td {
+  font-family:"Oswald",sans-serif !important; letter-spacing:.09em !important;
+  text-transform: uppercase;
+}
+
+/* ---- Chalkboard sidebar ---- */
+.sidebar {
+  background-color: var(--chalk-bg);
+  background-image:
+    radial-gradient(rgba(236,228,205,.05) 1px, transparent 1px),
+    radial-gradient(rgba(236,228,205,.04) 1px, transparent 1px);
+  background-size: 22px 22px, 36px 36px;
+  background-position: 0 0, 11px 18px;
+  border-right: 3px solid #241a0f;           /* a thin wooden frame edge */
+  box-shadow: inset -6px 0 14px -10px rgba(0,0,0,.6);
+}
+.sidebar .brand { font-family:"Caveat",cursive; font-weight:700; font-size:20px; color: var(--chalk-text); }
+.sidebar-top, .sidebar-branch-row, .sidebar-footer { border-color: var(--chalk-line) !important; }
+.nav-link { color: var(--chalk-muted); font-weight: 500; }
+.nav-link svg { opacity: .9; }
+.nav-link:hover { background: rgba(236,228,205,.08); color: var(--chalk-text); }
+.nav-link.active { background: rgba(236,228,205,.13); color: var(--chalk-text); }
+.nav-link.active::before { background: var(--accent); width: 4px; }
+.nav-section-label { color: var(--chalk-muted) !important; }
+.sidebar-collapse-btn, .sidebar-icon-btn, .sidebar-whoami, .sidebar-branch-pill { color: var(--chalk-muted); }
+.sidebar-collapse-btn:hover, .sidebar-icon-btn:hover { background: rgba(236,228,205,.08); color: var(--chalk-text); }
+.sidebar-branch-select {
+  background: rgba(236,228,205,.08); color: var(--chalk-text);
+  border: 1px solid var(--chalk-line);
+}
+.sidebar-branch-select option { color: #27271d; }
+
+/* ---- Tactile paper cards ---- */
+.card {
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 2px 0 rgba(120,100,60,.10), 0 10px 20px -14px rgba(60,50,25,.45);
+}
+.card.clickable:hover { transform: translateY(-2px) rotate(-.35deg); box-shadow: 0 4px 0 rgba(120,100,60,.12), 0 16px 26px -14px rgba(60,50,25,.5); }
+
+/* ---- Chunky, pressable buttons ---- */
+.btn { border-radius: 11px; font-weight: 700; border-width: 1.5px; }
+.btn:hover { transform: none; }
+.btn-primary {
+  box-shadow: 0 3px 0 var(--accent-dark), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.btn-primary:hover { background: var(--accent); box-shadow: 0 2px 0 var(--accent-dark); transform: translateY(1px); }
+.btn-primary:active { transform: translateY(3px); box-shadow: 0 0 0 var(--accent-dark); }
+
+/* ---- Inputs: soft paper wells ---- */
+input, select, textarea { border-width: 1.5px; border-radius: 10px; }
+
+/* ---- Dashed "menu leader" lines on tables & lists ---- */
+th { border-bottom: 2px dashed var(--border) !important; color: var(--accent-dark) !important; }
+td { border-top: 1px dashed var(--border-soft) !important; }
+hr { border: none; border-top: 1.5px dashed var(--border); }
+.leader { display:flex; align-items:baseline; gap:8px; }
+.leader > :first-child::after {
+  content:""; flex:1 1 auto; margin:0 4px; align-self: end; height: 0;
+  border-bottom: 2px dotted color-mix(in srgb, var(--muted) 55%, transparent); transform: translateY(-3px);
+}
+
+/* ---- Status chips as little hand-stuck stickers ---- */
+.badge { border-radius: 7px; transform: rotate(-.6deg); }
+.badge:nth-child(even) { transform: rotate(.6deg); }
+
+/* ---- Warm paper scrollbars ---- */
+*::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--accent) 34%, transparent); }
