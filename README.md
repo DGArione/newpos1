@@ -1,43 +1,38 @@
 # Golden Beach Restaurant — POS
 
-A full point-of-sale system for **Golden Beach Restaurant, Midigama**. The entire
-interface has been rebuilt in **Next.js** with a custom "vintage coastal" brand
-(olive green + kraft paper, warm terracotta accents) — no generic template look.
+Point-of-sale system for **Golden Beach Restaurant, Midigama**, with a custom
+"vintage coastal" brand (olive green + kraft paper, terracotta accents).
 
-```
-golden-beach-pos/
-├── backend/   Express + built-in SQLite — the API & data layer (/api/*)
-└── web/       Next.js 14 (App Router, TypeScript, Tailwind) — the whole UI
-```
+This repo has **two versions of the same app** — use whichever suits you:
 
-## Why this split
+| Folder     | What it is                                   | How to run                       |
+|------------|----------------------------------------------|----------------------------------|
+| `backend/` | **Plain Node.js app** (Express + SQLite). No build step — the UI is served directly. | `npm install && npm start` |
+| `web/`     | Next.js front-end (same features, needs a build). Optional. | `npm --prefix web install && npm run build:web` |
 
-The backend is the original, battle-tested service that does all the money math,
-auth, inventory and reporting **server-side**. Rather than risk subtle bugs by
-reimplementing payments/inventory, the UI was rewritten end-to-end in Next.js
-and talks to that proven API. The result is a 100% Next.js interface with a
-rock-solid core.
+## ▶️ Run it (plain Node.js — recommended)
 
-## Requirements
-
-- **Node.js ≥ 22.5** (the backend uses the built-in `node:sqlite` module)
-
-## Quick start
+No build tools, no Next.js — just Node.
 
 ```bash
-# install both apps
-npm run install:all
-
-# run both (backend on :3001, web on :3000)
-npm run dev
+npm install     # installs the backend
+npm start       # starts the app
 ```
 
 Then open **http://localhost:3000**.
 
-> Or run them in two terminals: `npm run dev:backend` and `npm run dev:web`.
-> In dev, `web` proxies `/api/*` to the backend (`BACKEND_URL`, default
-> `http://localhost:3001`). On first boot the backend seeds the Golden Beach
-> menu and demo accounts into `backend/data/pos.db`.
+> Requires **Node.js ≥ 22.5** (the app uses the built-in `node:sqlite` module,
+> so there is no separate database to install). On first run it creates
+> `backend/data/pos.db` and seeds the Golden Beach menu + demo accounts.
+> Use a different port with `PORT=8080 npm start`.
+
+You can also run it straight from the backend folder:
+
+```bash
+cd backend
+npm install
+npm start
+```
 
 ### Demo logins (PIN)
 
@@ -58,23 +53,28 @@ The demo menu is replaced with the **real Golden Beach menu** from the printed
 price lists — 142 dishes across 22 categories (Rice & Curry, Fried Rice, Kottu,
 Pizza, Roti, Juice, Lassi, Milkshake, Breakfast, …) with the correct `Rs.`
 prices, including the full pizza range (Margherita Rs.1700 → Mix Seafood
-Rs.2800). It lives in `backend/src/db.js` (`seedGoldenBeachMenu`) and is fully
-editable in-app under **Menu**.
+Rs.2800). It's editable in-app under **Menu Admin**. Service charge and VAT are
+set to 0 so totals match the printed prices.
 
-## Screens (all Next.js)
+## The redesign
 
-Order Entry · Payment · Kitchen · Floor · Menu · Dashboard · Reports · History ·
-Inventory · Customers · Users · Time Clock · Payroll · Z-Report · Petty Cash ·
-Messages · Audit Log · Branches · Online Orders · Settings · and the optional
-add-ons (Loyalty · Gift Cards · Promotions · Reservations, toggled in Settings).
+The whole interface wears a **Golden Beach** vintage brand — applied through the
+app's theme system, so every screen is restyled with no build step:
 
-## Design system
+- **Theme** — a new `goldenBeach` (light) / `goldenBeachNight` (dark) palette in
+  `backend/public/theme.js`: olive green, kraft paper, terracotta accents.
+- **Fonts** — Fraunces (headings) + Hanken Grotesk (UI), loaded in
+  `backend/public/style.css`.
+- Switch light/dark from the top bar; pick other palettes under **Settings**.
 
-- **Fonts** — Fraunces (headings), Hanken Grotesk (UI), Yellowtail (brand script)
-- **Palette** — olive `#4c5738`, kraft `#ece3d0`, cream panels, terracotta `#b06a38`
-- Light **and** dark themes, tokens in `web/src/app/globals.css`
+## The Next.js version (`web/`)
 
-## Deploying
+An alternative front-end built in Next.js with the same brand. It talks to the
+same backend API. Run the backend on `:3001` and the web app on `:3000`:
 
-Build the web app with `npm run build` and run the backend as a long-lived
-service. Point the web app at the backend with the `BACKEND_URL` env var.
+```bash
+npm run dev:backend     # terminal 1 — API on :3001
+npm run dev:web         # terminal 2 — Next.js UI on :3000
+```
+
+Most people should just use the plain Node.js app above.

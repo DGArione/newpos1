@@ -4,6 +4,7 @@
 
 // ============ 10 Light themes ============
 window.POS_THEMES = {
+  goldenBeach: { label:"Golden Beach", accent:"#b06a38",accentDark:"#8f5126",accentSoft:"#f1e2d0",bg:"#ece3d0",panel:"#f7f1e2",neutralBg:"#e7ddc6",borderSoft:"#e7dcc3",border:"#d9cdb0",preview:["#b06a38","#4c5738","#ece3d0"] },
   espresso:  { label:"Espresso Brown", accent:"#9a5f33",accentDark:"#79471f",accentSoft:"#f3e7d7",bg:"#f8f5f0",panel:"#ffffff",neutralBg:"#f1ece4",borderSoft:"#f1ebe2",border:"#e8e0d3",preview:["#9a5f33","#f3e7d7","#f8f5f0"] },
   ocean:     { label:"Ocean Blue",     accent:"#1a6fa8",accentDark:"#124f7a",accentSoft:"#d6eaf8",bg:"#f0f6fb",panel:"#ffffff",neutralBg:"#e3f0f8",borderSoft:"#d6eaf8",border:"#b8d8ed",preview:["#1a6fa8","#d6eaf8","#f0f6fb"] },
   forest:    { label:"Forest Green",   accent:"#2d7a3e",accentDark:"#1f5a2c",accentSoft:"#d5eeda",bg:"#f1f8f3",panel:"#ffffff",neutralBg:"#e3f2e8",borderSoft:"#d0ebd6",border:"#b3d9be",preview:["#2d7a3e","#d5eeda","#f1f8f3"] },
@@ -18,6 +19,7 @@ window.POS_THEMES = {
 
 // ============ 10 Dark themes ============
 Object.assign(window.POS_THEMES, {
+  goldenBeachNight: { label:"Golden Beach Night", dark:true, accent:"#cb824b",accentDark:"#b5703a",accentSoft:"#33271c",bg:"#1b1e15",panel:"#24281c",neutralBg:"#2b3022",borderSoft:"#2c3121",border:"#363b2a",preview:["#cb824b","#24281c","#1b1e15"] },
   carbonBlack:  { label:"Carbon Black",  dark:true, accent:"#e2e8f0",accentDark:"#cbd5e0",accentSoft:"#2d3748",bg:"#0d1117",panel:"#161b22",neutralBg:"#21262d",borderSoft:"#21262d",border:"#30363d",preview:["#e2e8f0","#161b22","#0d1117"] },
   deepOcean:    { label:"Deep Ocean",    dark:true, accent:"#38bdf8",accentDark:"#0ea5e9",accentSoft:"#0c2a3f",bg:"#03111f",panel:"#0a1e30",neutralBg:"#0e2a42",borderSoft:"#0e2a42",border:"#144566",preview:["#38bdf8","#0a1e30","#03111f"] },
   forestNight:  { label:"Forest Night",  dark:true, accent:"#4ade80",accentDark:"#22c55e",accentSoft:"#052e16",bg:"#020d06",panel:"#061a0d",neutralBg:"#0d2d17",borderSoft:"#0d2d17",border:"#14532d",preview:["#4ade80","#061a0d","#020d06"] },
@@ -73,7 +75,7 @@ Object.assign(window.POS_THEMES, {
     applyPalette(palette);
     window._currentMode = mode;
 
-    if (settings.font) document.documentElement.style.setProperty("--font-family-override", `"${settings.font}", "Inter", sans-serif`);
+    if (settings.font) document.documentElement.style.setProperty("--font-family-override", `"${settings.font}", "Hanken Grotesk", sans-serif`);
 
     const name = settings.businessName || "Restaurant POS";
     document.querySelectorAll("[data-brand-name]").forEach(el => (el.textContent = name));

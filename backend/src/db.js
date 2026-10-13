@@ -138,13 +138,13 @@ CREATE TABLE IF NOT EXISTS settings (
   businessEmail            TEXT DEFAULT '',
   theme                    TEXT DEFAULT 'light',
   allowUserThemeOverride   INTEGER DEFAULT 1,
-  lightThemeId             TEXT DEFAULT 'espresso',
-  darkThemeId              TEXT DEFAULT 'slateNight',
-  activeThemeId            TEXT DEFAULT 'espresso',
-  accentColor              TEXT DEFAULT '#8a5a34',
-  accentDark               TEXT DEFAULT '#6e4527',
-  accentSoft               TEXT DEFAULT '#f1e4d3',
-  font                     TEXT DEFAULT 'Inter',
+  lightThemeId             TEXT DEFAULT 'goldenBeach',
+  darkThemeId              TEXT DEFAULT 'goldenBeachNight',
+  activeThemeId            TEXT DEFAULT 'goldenBeach',
+  accentColor              TEXT DEFAULT '#b06a38',
+  accentDark               TEXT DEFAULT '#8f5126',
+  accentSoft               TEXT DEFAULT '#f1e2d0',
+  font                     TEXT DEFAULT 'Hanken Grotesk',
   currencySymbol           TEXT DEFAULT 'Rs. ',
   serviceChargeRate        REAL DEFAULT 0.1000,
   vatRate                  REAL DEFAULT 0.0800,
@@ -554,8 +554,10 @@ function seedIfEmpty() {
   if (count > 0) return;
 
   db.exec(`
-    INSERT INTO settings (id, businessName, businessTagline, businessAddress, businessPhone, serviceChargeRate, vatRate)
-    VALUES (1, 'Golden Beach Restaurant', 'Midigama', 'Midigama, Sri Lanka', '', 0, 0);
+    INSERT INTO settings (id, businessName, businessTagline, businessAddress, businessPhone, serviceChargeRate, vatRate,
+      font, lightThemeId, darkThemeId, activeThemeId, accentColor, accentDark, accentSoft)
+    VALUES (1, 'Golden Beach Restaurant', 'Midigama', 'Midigama, Sri Lanka', '', 0, 0,
+      'Hanken Grotesk', 'goldenBeach', 'goldenBeachNight', 'goldenBeach', '#b06a38', '#8f5126', '#f1e2d0');
 
     INSERT INTO branches (id, name, address, phone, status) VALUES
     (1, 'Golden Beach Restaurant', 'Midigama, Sri Lanka', '', 'active');
