@@ -820,6 +820,11 @@ kbd { font-family:"JetBrains Mono",monospace; font-size:11px; background:var(--n
    ===================================================================== */
 
 :root {
+  /* Aliases for legacy variable names some pages/modals still reference,
+     so they resolve to the current theme instead of being undefined. */
+  --card: var(--panel);
+  --input-bg: color-mix(in srgb, var(--neutral-bg) 55%, var(--panel));
+
   --chalk-bg:   #2c3420;
   --chalk-bg2:  #333c26;
   --chalk-text: #ece4cd;
