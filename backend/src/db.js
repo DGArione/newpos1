@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS settings (
   receiptShowVatBreakdown  INTEGER DEFAULT 1,
   notifyEmailEnabled       INTEGER DEFAULT 0,
   notifySmsEnabled         INTEGER DEFAULT 0,
-  loginLayout              TEXT DEFAULT 'classic',
+  loginLayout              TEXT DEFAULT 'chalkboard',
   loginBgUrl               TEXT DEFAULT '',
   lastBackupAt             TEXT DEFAULT NULL
 );

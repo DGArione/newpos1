@@ -8,7 +8,7 @@
 <style>
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-body { min-height: 100vh; font-family: var(--font-family-override, "Inter"), -apple-system, sans-serif; background: var(--bg); color: var(--text); }
+body { min-height: 100vh; font-family: var(--font-family-override, "Hanken Grotesk"), -apple-system, sans-serif; background: var(--bg); color: var(--text); }
 
 /* ===== Login layouts — a centered card; the look is set by the
    body[data-login-layout="..."] attribute (Settings → Login Page). ===== */
@@ -45,14 +45,15 @@ body { min-height: 100vh; font-family: var(--font-family-override, "Inter"), -ap
 
 .login-pane { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 28px; min-height: 100vh; position: relative; }
 .login-card {
-  width: 380px; max-width: 100%; text-align: center; position: relative; z-index: 2;
-  background: var(--panel); border: 1px solid var(--border); border-radius: 22px;
-  padding: 38px 34px; box-shadow: var(--shadow-lg);
+  width: 384px; max-width: 100%; text-align: center; position: relative; z-index: 2;
+  background: var(--panel); border: 1.5px solid var(--border); border-radius: 20px;
+  padding: 40px 34px; box-shadow: 0 3px 0 rgba(120,100,60,.12), 0 26px 60px -24px rgba(31,28,16,.5);
 }
-.login-logo { color: var(--accent); margin-bottom: 10px; }
-.login-logo img { width: 52px; height: 52px; border-radius: 13px; object-fit: cover; box-shadow: var(--shadow-sm); }
-.login-brand { font-size: 23px; font-weight: 800; letter-spacing: -.02em; color: var(--text); margin: 0 0 4px; }
-.login-muted { color: var(--muted); font-size: 13px; margin: 0 0 24px; }
+.login-logo { margin-bottom: 8px; display: flex; justify-content: center; }
+.login-logo svg, .login-logo img { width: 60px; height: 60px; padding: 13px; border-radius: 50%; border: 2.5px solid var(--accent); background: var(--accent-soft); color: var(--accent); box-sizing: border-box; }
+.login-logo img { padding: 0; object-fit: cover; }
+.login-brand { font-family: "Caveat", cursive; font-size: 32px; font-weight: 700; letter-spacing: 0; color: var(--text); margin: 8px 0 2px; }
+.login-muted { color: var(--muted); font-family: "Caveat", cursive; font-size: 18px; margin: 0 0 22px; }
 
 /* Segmented method toggle */
 .login-methods { display: flex; gap: 4px; background: var(--neutral-bg); padding: 4px; border-radius: 12px; margin-bottom: 20px; }
@@ -69,15 +70,16 @@ body { min-height: 100vh; font-family: var(--font-family-override, "Inter"), -ap
 .pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: scale(1.15); }
 .pin-pad { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 8px; }
 .pin-btn {
-  padding: 17px 8px; font-size: 19px; font-weight: 700; border-radius: 13px;
-  border: 1px solid var(--border-soft); background: color-mix(in srgb, var(--neutral-bg) 60%, var(--panel)); color: var(--text);
-  cursor: pointer; font-family: inherit; transition: all .12s ease;
+  padding: 17px 8px; font-size: 20px; font-weight: 700; border-radius: 13px;
+  border: 1.5px solid var(--border); background: var(--panel); color: var(--text);
+  cursor: pointer; font-family: inherit; transition: background .12s ease, border-color .12s ease, transform .08s ease;
 }
-.pin-btn:hover { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); transform: translateY(-1px); }
-.pin-btn:active { transform: scale(.96); }
-.pin-btn-go { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; font-size: 15px !important; }
-.pin-btn-go:hover { background: var(--accent-dark) !important; }
-.pin-btn-clear { font-size: 17px !important; }
+.pin-btn:hover { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+.pin-btn:active { transform: translateY(2px); }
+.pin-btn-go { background: var(--accent) !important; color: #fff !important; border-color: transparent !important; font-size: 16px !important; box-shadow: 0 3px 0 var(--accent-dark); }
+.pin-btn-go:hover { background: var(--accent) !important; }
+.pin-btn-go:active { transform: translateY(3px); box-shadow: 0 0 0 var(--accent-dark); }
+.pin-btn-clear { font-size: 18px !important; }
 
 .login-field {
   width: 100%; margin-bottom: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 11px;
@@ -97,73 +99,55 @@ body { min-height: 100vh; font-family: var(--font-family-override, "Inter"), -ap
 }
 
 /* ============================================================
-   PER-LAYOUT STYLES — set by body[data-login-layout="..."]
-   (admin picks this in Settings → Login Page). Each one restyles
-   the centered card + its backdrop. Default = classic.
+   HANDCRAFTED LOGIN LAYOUTS — set by body[data-login-layout="..."]
+   (admin picks this in Settings → Login Page). Default = chalkboard.
    ============================================================ */
 
-/* ---- Classic: clean card on the neutral app background ---- */
-body[data-login-layout="classic"] .login-pane { background: var(--neutral-bg); }
+/* ---- Chalkboard hero panel (left side, "chalkboard" layout only) ---- */
+.login-hero {
+  flex: 1.05; position: relative; overflow: hidden;
+  flex-direction: column; justify-content: space-between; padding: 54px 50px;
+  color: #ece4cd; background-color: #2c3420;
+  background-image:
+    radial-gradient(rgba(236,228,205,.05) 1px, transparent 1px),
+    radial-gradient(rgba(236,228,205,.04) 1px, transparent 1px);
+  background-size: 22px 22px, 36px 36px; background-position: 0 0, 11px 18px;
+  border-right: 6px solid #241a0f;
+}
+.hero-top { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
+.hero-mark { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+.hero-eyebrow { font-family: "Oswald", sans-serif; letter-spacing: .32em; font-size: 11px; text-transform: uppercase; opacity: .82; }
+.hero-mid { position: relative; z-index: 2; }
+.hero-script { font-family: "Yellowtail", cursive; font-size: clamp(42px, 5vw, 66px); line-height: 1.04; color: #f4e9cf; }
+.hero-tag { font-family: "Caveat", cursive; font-size: 25px; margin-top: 14px; opacity: .92; max-width: 440px; line-height: 1.3; }
+.hero-foot { position: relative; z-index: 2; font-family: "Oswald", sans-serif; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; opacity: .68; }
+.hero-doodle { position: absolute; opacity: .13; color: #f4e9cf; z-index: 1; pointer-events: none; }
+.hero-doodle.cup { right: 40px; top: 33%; width: 180px; }
+.hero-doodle.wave { left: -20px; right: -20px; bottom: 96px; width: calc(100% + 40px); }
 
-/* ---- Glassmorphism: photo backdrop + frosted translucent card ---- */
-body[data-login-layout="glass"] .login-pane {
-  background: var(--accent-dark);
-  background-size: cover; background-position: center;
-}
-body[data-login-layout="glass"] .login-pane::before {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(120deg, rgba(8,8,14,.55), rgba(8,8,14,.30));
-}
-body[data-login-layout="glass"] .login-card {
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.28);
-  box-shadow: 0 24px 70px rgba(0,0,0,.35);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  color: #fff;
-}
-body[data-login-layout="glass"] .login-brand,
-body[data-login-layout="glass"] .login-logo { color: #fff; }
-body[data-login-layout="glass"] .login-muted { color: rgba(255,255,255,.8); }
-body[data-login-layout="glass"] .login-methods { background: rgba(255,255,255,.14); }
-body[data-login-layout="glass"] .login-methods .pin-btn { color: rgba(255,255,255,.85); }
-body[data-login-layout="glass"] .login-methods .pin-btn.active { background: rgba(255,255,255,.22); color: #fff; }
-body[data-login-layout="glass"] .pin-btn { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.22); color: #fff; }
-body[data-login-layout="glass"] .pin-btn:hover { background: rgba(255,255,255,.22); }
-body[data-login-layout="glass"] .login-field { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.26); color: #fff; }
-body[data-login-layout="glass"] .login-field::placeholder { color: rgba(255,255,255,.65); }
+/* Hero hidden by default; only the chalkboard layout shows it */
+.login-hero { display: none; }
+body[data-login-layout="chalkboard"] .login-hero { display: flex; }
 
-/* ---- Gradient Luxe: animated accent gradient backdrop + white card ---- */
-body[data-login-layout="gradient"] .login-pane {
-  background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 45%, color-mix(in srgb, var(--accent) 55%, #ffffff) 100%);
-  background-size: 300% 300%;
-  animation: loginGradientShift 14s ease infinite;
+/* ---- Kraft Ticket: one warm card with a dashed receipt frame ---- */
+body[data-login-layout="kraft-ticket"] .login-pane { background: var(--bg); }
+body[data-login-layout="kraft-ticket"] .login-card {
+  border: 1.5px solid var(--border);
+  outline: 2px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+  outline-offset: -11px; border-radius: 12px;
 }
-@keyframes loginGradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-body[data-login-layout="gradient"] .login-card { box-shadow: 0 30px 80px rgba(0,0,0,.28); }
 
-/* ---- Dark Elite: near-black stage + glowing accent card ---- */
-body[data-login-layout="dark-elite"] .login-pane { background: #06060a; }
-body[data-login-layout="dark-elite"] .login-card {
-  background: #0f0f18;
-  border: 1px solid color-mix(in srgb, var(--accent) 55%, #1a1a26);
-  box-shadow: 0 0 0 1px rgba(255,255,255,.02), 0 0 60px -10px var(--accent), 0 30px 70px rgba(0,0,0,.6);
-  color: #f4f4f8;
+/* ---- Seaside: golden sun glow behind the card + a hand-drawn wave ---- */
+body[data-login-layout="seaside"] .login-pane { background: var(--bg); overflow: hidden; }
+body[data-login-layout="seaside"] .login-pane::before {
+  content: ""; position: absolute; width: 440px; height: 440px; border-radius: 50%; top: -130px; z-index: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sun, #e0a040) 55%, transparent), transparent 70%);
 }
-body[data-login-layout="dark-elite"] .login-brand { color: #fff; }
-body[data-login-layout="dark-elite"] .login-logo { color: var(--accent); }
-body[data-login-layout="dark-elite"] .login-muted { color: #9a9aa8; }
-body[data-login-layout="dark-elite"] .login-methods { background: #1a1a26; }
-body[data-login-layout="dark-elite"] .login-methods .pin-btn { color: #9a9aa8; }
-body[data-login-layout="dark-elite"] .login-methods .pin-btn.active { background: #26263a; color: #fff; }
-body[data-login-layout="dark-elite"] .pin-btn { background: #16161f; border-color: #26263a; color: #f4f4f8; }
-body[data-login-layout="dark-elite"] .pin-btn:hover { background: color-mix(in srgb, var(--accent) 22%, #16161f); border-color: var(--accent); }
-body[data-login-layout="dark-elite"] .login-field { background: #16161f; border-color: #26263a; color: #f4f4f8; }
-body[data-login-layout="dark-elite"] .login-field::placeholder { color: #6a6a7a; }
-
-/* ---- Bold Brand: giant ghost business name behind the card ---- */
-body[data-login-layout="bold-brand"] .login-pane { background: var(--neutral-bg); overflow: hidden; }
-body[data-login-layout="bold-brand"] #loginGhost { display: flex; }
+body[data-login-layout="seaside"] .login-pane::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 64px; z-index: 0; opacity: .6;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='64' viewBox='0 0 220 64'%3E%3Cpath d='M0 40 Q 27 20 55 40 T 110 40 T 165 40 T 220 40' stroke='%234c5738' stroke-width='3' fill='none'/%3E%3Cpath d='M0 54 Q 27 36 55 54 T 110 54 T 165 54 T 220 54' stroke='%23b06a38' stroke-width='3' fill='none'/%3E%3C/svg%3E") repeat-x bottom;
+  background-size: 220px 64px;
+}
 
 /* ===== FIRST-RUN SETUP POPUP ===== */
 .setup-backdrop { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; padding: 16px; }
@@ -248,25 +232,32 @@ body[data-login-layout="bold-brand"] #loginGhost { display: flex; }
   <div class="login-shell">
     <!-- ===== Customizable hero (image + brand) ===== -->
     <aside class="login-hero" id="loginHero">
-      <div class="login-hero-tint"></div>
-      <div class="login-hero-inner">
-        <div class="login-hero-badge">
-          <img data-brand-logo src="" alt="" style="display:none;"/>
-          <span class="mark" id="heroMark">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 3v6a2 2 0 1 0 4 0V3"/><path d="M9 9v12"/><path d="M17 3c-1.6 0-3 2-3 5s1.4 5 3 5"/><path d="M17 13v8"/>
-            </svg>
-          </span>
-          <span data-brand-name>Restaurant POS</span>
-        </div>
-        <h1 class="login-hero-title" id="heroHeadline">Run your<br/>restaurant,<br/>beautifully.</h1>
-        <p class="login-hero-tag" id="heroTagline">One fast, modern point of sale for orders, kitchen, payments and reporting — across every branch.</p>
-        <ul class="login-hero-points">
-          <li><span class="tick">✓</span> Dine-in, takeaway &amp; online ordering</li>
-          <li><span class="tick">✓</span> Live kitchen display &amp; floor plan</li>
-          <li><span class="tick">✓</span> Real-time sales, inventory &amp; reports</li>
-        </ul>
+      <div class="hero-top">
+        <span class="hero-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 3v6a2 2 0 1 0 4 0V3"/><path d="M9 9v12"/><path d="M17 3c-1.6 0-3 2-3 5s1.4 5 3 5"/><path d="M17 13v8"/>
+          </svg>
+        </span>
+        <span class="hero-eyebrow" data-brand-name>Restaurant POS</span>
       </div>
+
+      <div class="hero-mid">
+        <div class="hero-script">Good food,<br/>golden hours.</div>
+        <div class="hero-tag">Welcome back — let's get the kitchen humming.</div>
+      </div>
+
+      <div class="hero-foot" data-brand-name>Restaurant POS</div>
+
+      <!-- hand-drawn doodles -->
+      <svg class="hero-doodle cup" viewBox="0 0 120 92" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 34 h62 v18 a24 24 0 0 1 -24 24 h-14 a24 24 0 0 1 -24 -24 z"/>
+        <path d="M84 40 h12 a10 10 0 0 1 0 20 h-11"/>
+        <path d="M38 22 q7 -9 0 -16"/><path d="M52 22 q7 -9 0 -16"/><path d="M66 22 q7 -9 0 -16"/>
+        <path d="M28 86 h50"/>
+      </svg>
+      <svg class="hero-doodle wave" viewBox="0 0 400 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+        <path d="M2 12 Q 27 2 52 12 T 102 12 T 152 12 T 202 12 T 252 12 T 302 12 T 352 12 T 398 12"/>
+      </svg>
     </aside>
 
     <!-- ===== Login pane ===== -->
@@ -381,22 +372,18 @@ body[data-login-layout="bold-brand"] #loginGhost { display: flex; }
       let s = {};
       try { const r = await fetch("api/public/settings"); const data = await r.json(); if (r.ok) s = data; } catch(e) {}
 
-      const biz   = s.businessName || "Restaurant POS";
-      const bgUrl  = s.loginBgUrl || "";
-      const layout = s.loginLayout || "classic";
+      const biz    = s.businessName || "Restaurant POS";
+      const LAYOUTS = ["chalkboard", "kraft-ticket", "seaside"];
+      const layout = LAYOUTS.includes(s.loginLayout) ? s.loginLayout : "chalkboard";
 
       // Brand name everywhere
       document.querySelectorAll("[data-brand-name]").forEach(el => el.textContent = biz);
 
-      // Apply the chosen login layout (Settings → Login Page). The look is
-      // driven by the body[data-login-layout] attribute + its CSS block.
+      // Apply the chosen handcrafted login layout (Settings → Login Page).
       document.body.dataset.loginLayout = layout;
 
-      // Glassmorphism uses the uploaded photo as a full-pane backdrop.
-      if (layout === "glass" && bgUrl) {
-        const pane = document.querySelector(".login-pane");
-        if (pane) pane.style.backgroundImage = `url('${bgUrl}')`;
-      }
+      // Optional: give the login page its own palette, independent of the app.
+      if (s.loginThemeId && typeof posApplyThemeById === "function") posApplyThemeById(s.loginThemeId);
 
       // Logo: replace the default marks with the uploaded logo
       if (s.logoUrl) {

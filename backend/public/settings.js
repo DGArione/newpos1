@@ -207,7 +207,7 @@ function populateForm() {
   if (lbEl) lbEl.value = settings.loginBgUrl || "";
   // Show/hide based on saved setting
   const imgRow = document.getElementById("loginBgUrlRow");
-  const activeLayout = LOGIN_LAYOUTS.find(l => l.id === (settings.loginLayout || "classic"));
+  const activeLayout = LOGIN_LAYOUTS.find(l => l.id === (settings.loginLayout || "chalkboard"));
   if (imgRow) imgRow.style.display = (activeLayout && activeLayout.needsImage) ? "" : "none";
 }
 
@@ -215,11 +215,9 @@ function populateForm() {
 // Track what's been selected (staged) vs what's saved
 // ---- Login page layout picker ----
 const LOGIN_LAYOUTS = [
-  { id: "classic",     label: "Classic Clean",   desc: "Timeless white card centred on a clean background. Works with any theme.",     needsImage: false },
-  { id: "glass",       label: "Glassmorphism",   desc: "Full-screen photo with a frosted glass card floating over it. Stunning look.", needsImage: true  },
-  { id: "gradient",    label: "Gradient Luxe",   desc: "Rich animated gradient using your accent colour. No image needed.",            needsImage: false },
-  { id: "dark-elite",  label: "Dark Elite",      desc: "Premium dark screen with a glowing accent border around the card.",           needsImage: false },
-  { id: "bold-brand",  label: "Bold Brand",      desc: "Giant ghost business name behind the PIN pad — your brand front and centre.",  needsImage: false },
+  { id: "chalkboard",   label: "Chalkboard Split", desc: "An olive chalkboard panel with the café name in script, beside a warm kraft login card.", needsImage: false },
+  { id: "kraft-ticket", label: "Kraft Ticket",     desc: "One cosy kraft card framed with a dashed receipt border. Simple and homely.",            needsImage: false },
+  { id: "seaside",      label: "Seaside",          desc: "Kraft card with a golden sun glow behind it and a hand-drawn wave along the bottom.",    needsImage: false },
 ];
 
 // Build the login-page theme dropdown from the palettes theme.js defines.
@@ -241,7 +239,7 @@ function renderLoginThemeSelect() {
 function renderLoginLayoutPicker() {
   const el = document.getElementById("loginLayoutPicker");
   if (!el) return;
-  const active = settings.loginLayout || "classic";
+  const active = settings.loginLayout || "chalkboard";
   el.innerHTML = LOGIN_LAYOUTS.map(l => `
     <div data-layout="${l.id}" style="border:2px solid ${l.id===active ? "var(--accent)" : "var(--border)"}; border-radius:12px; padding:12px; cursor:pointer; background:var(--panel); transition:all .15s; position:relative;">
       ${l.id===active ? `<span style="position:absolute;top:8px;right:8px;background:var(--accent);color:white;font-size:9px;font-weight:700;border-radius:4px;padding:2px 6px;">ACTIVE</span>` : ""}
@@ -255,7 +253,7 @@ function renderLoginLayoutPicker() {
 
   // Show/hide image URL field based on selection
   function syncImageField() {
-    const active = settings.loginLayout || "classic";
+    const active = settings.loginLayout || "chalkboard";
     const activeLayout = LOGIN_LAYOUTS.find(l => l.id === active);
     const imgRow = document.getElementById("loginBgUrlRow");
     if (imgRow) imgRow.style.display = (activeLayout && activeLayout.needsImage) ? "" : "none";
@@ -272,16 +270,13 @@ function renderLoginLayoutPicker() {
 
 function loginLayoutPreview(id) {
   const s = 'width:100%;height:100%;display:block;';
-  // Classic: clean white card centered on light bg
-  if (id === "classic") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="var(--neutral-bg)"/><rect x="28" y="10" width="44" height="52" rx="6" fill="var(--panel)" stroke="var(--border)" stroke-width="1.5"/><rect x="38" y="18" width="24" height="3" rx="1.5" fill="var(--accent)"/><rect x="40" y="25" width="20" height="2" rx="1" fill="var(--muted)" opacity=".5"/><rect x="37" y="32" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="46" y="32" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="55" y="32" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="37" y="41" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="46" y="41" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="55" y="41" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="37" y="52" width="25" height="6" rx="3" fill="var(--accent)"/></svg>`;
-  // Glass: photo bg + frosted card
-  if (id === "glass") return `<svg viewBox="0 0 100 72" style="${s}"><defs><linearGradient id="gbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a3a5c"/><stop offset="50%" stop-color="#2d5a3e"/><stop offset="100%" stop-color="#5c1a3a"/></linearGradient></defs><rect width="100" height="72" fill="url(#gbg)"/><rect width="100" height="72" fill="rgba(0,0,0,0.3)"/><rect x="22" y="9" width="56" height="54" rx="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="36" y="17" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/><rect x="38" y="23" width="24" height="2" rx="1" fill="rgba(255,255,255,0.4)"/><rect x="30" y="30" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="42" y="30" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="54" y="30" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="30" y="41" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="42" y="41" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="54" y="41" width="10" height="9" rx="2" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><rect x="33" y="53" width="28" height="7" rx="3.5" fill="var(--accent)"/></svg>`;
-  // Gradient: rich gradient bg, white floating card
-  if (id === "gradient") return `<svg viewBox="0 0 100 72" style="${s}"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--accent-dark)"/><stop offset="100%" stop-color="var(--accent)"/></linearGradient></defs><rect width="100" height="72" fill="url(#gg)"/><rect x="22" y="8" width="56" height="56" rx="10" fill="white" opacity=".95"/><rect x="36" y="16" width="28" height="3" rx="1.5" fill="var(--accent)"/><rect x="39" y="22" width="22" height="2" rx="1" fill="#aaa"/><rect x="30" y="29" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="42" y="29" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="54" y="29" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="30" y="40" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="42" y="40" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="54" y="40" width="10" height="9" rx="2" fill="#f0f0f0"/><rect x="33" y="52" width="28" height="7" rx="3.5" fill="var(--accent)"/></svg>`;
-  // Dark Elite: dark bg, glowing card
-  if (id === "dark-elite") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="#06060a"/><rect x="20" y="7" width="60" height="58" rx="10" fill="#0f0f18" stroke="var(--accent)" stroke-width="1.5" opacity=".9"/><rect x="20" y="7" width="60" height="58" rx="10" fill="none" stroke="var(--accent)" stroke-width="4" opacity=".15"/><rect x="36" y="15" width="28" height="3" rx="1.5" fill="white" opacity=".85"/><rect x="39" y="21" width="22" height="2" rx="1" fill="white" opacity=".35"/><rect x="30" y="28" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="42" y="28" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="54" y="28" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="30" y="39" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="42" y="39" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="54" y="39" width="10" height="9" rx="2" fill="#1a1a2e" stroke="#2a2a3e" stroke-width="1"/><rect x="33" y="51" width="28" height="8" rx="4" fill="var(--accent)"/><circle cx="50" cy="36" r="22" fill="var(--accent)" opacity=".04"/></svg>`;
-  // Bold Brand: giant ghost text bg
-  if (id === "bold-brand") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="var(--bg)"/><text x="50" y="80" text-anchor="middle" font-size="72" font-weight="900" fill="var(--accent)" opacity=".07" font-family="sans-serif">POS</text><rect x="24" y="10" width="52" height="52" rx="12" fill="var(--panel)" stroke="var(--border)" stroke-width="1"/><rect x="36" y="16" width="28" height="5" rx="2.5" fill="var(--accent)"/><rect x="32" y="26" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="43" y="26" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="54" y="26" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="32" y="36" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="43" y="36" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="54" y="36" width="9" height="8" rx="2" fill="var(--neutral-bg)" stroke="var(--border)" stroke-width="1"/><rect x="35" y="47" width="24" height="7" rx="3.5" fill="var(--accent)"/></svg>`;
+  const pad = (x) => `<rect x="${x}" y="30" width="7" height="7" rx="1.5" fill="var(--border)"/><rect x="${x}" y="40" width="7" height="7" rx="1.5" fill="var(--border)"/>`;
+  // Chalkboard Split: dark olive panel on the left, kraft card on the right
+  if (id === "chalkboard") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="var(--bg)"/><rect width="46" height="72" fill="#2c3420"/><rect x="44" y="0" width="2" height="72" fill="#241a0f"/><circle cx="12" cy="13" r="5" fill="var(--accent)"/><path d="M8 34 h26 M8 41 h20 M8 48 h24" stroke="#f4e9cf" stroke-width="2.4" stroke-linecap="round" opacity=".85"/><rect x="55" y="12" width="38" height="48" rx="7" fill="var(--panel)" stroke="var(--border)" stroke-width="1.5"/><rect x="64" y="19" width="20" height="3" rx="1.5" fill="var(--accent)"/><rect x="63" y="29" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="71" y="29" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="79" y="29" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="63" y="38" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="71" y="38" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="79" y="38" width="6" height="6" rx="1.5" fill="var(--border)"/><rect x="63" y="49" width="22" height="6" rx="3" fill="var(--accent)"/></svg>`;
+  // Kraft Ticket: single kraft card with a dashed receipt frame
+  if (id === "kraft-ticket") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="var(--bg)"/><rect x="28" y="9" width="44" height="54" rx="6" fill="var(--panel)" stroke="var(--border)" stroke-width="1.5"/><rect x="32" y="13" width="36" height="46" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 3"/><rect x="40" y="19" width="20" height="3" rx="1.5" fill="var(--accent)"/>${pad(38)}${pad(46)}${pad(54)}<rect x="38" y="52" width="24" height="6" rx="3" fill="var(--accent)"/></svg>`;
+  // Seaside: sun glow + wave
+  if (id === "seaside") return `<svg viewBox="0 0 100 72" style="${s}"><rect width="100" height="72" fill="var(--bg)"/><circle cx="50" cy="6" r="26" fill="var(--sun, #e0a040)" opacity=".4"/><rect x="28" y="11" width="44" height="46" rx="7" fill="var(--panel)" stroke="var(--border)" stroke-width="1.5"/><rect x="38" y="17" width="24" height="3" rx="1.5" fill="var(--accent)"/>${pad(38)}${pad(46)}${pad(54)}<rect x="38" y="49" width="24" height="5" rx="2.5" fill="var(--accent)"/><path d="M0 66 Q 12 60 25 66 T 50 66 T 75 66 T 100 66" stroke="#4c5738" stroke-width="2" fill="none"/><path d="M0 70 Q 12 64 25 70 T 50 70 T 75 70 T 100 70" stroke="var(--accent)" stroke-width="2" fill="none"/></svg>`;
   return "";
 }
 
@@ -434,7 +429,7 @@ function setupSaveHandlers() {
   if (saveLoginPageBtn) {
     saveLoginPageBtn.onclick = async () => {
       const bgUrl = document.getElementById("setLoginBgUrl").value.trim();
-      const layout = settings.loginLayout || "centered";
+      const layout = settings.loginLayout || "chalkboard";
       const loginThemeId = (document.getElementById("setLoginTheme") || {}).value || "";
       const updated = await saveSettings({ loginLayout: layout, loginBgUrl: bgUrl, loginThemeId }, "Login page");
       if (updated) { settings = updated; renderLoginLayoutPicker(); }
