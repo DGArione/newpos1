@@ -164,6 +164,10 @@ body.has-sidebar.sidebar-collapsed { padding-left: var(--sidebar-w-collapsed); }
 }
 body.sidebar-collapsed .topbar { left: var(--sidebar-w-collapsed); }
 .topbar-right { display: flex; align-items: center; gap: 6px; }
+.topbar-clock { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.05; margin-right: 6px; user-select: none; }
+.topbar-clock .t { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.topbar-clock .d { font-size: 10px; color: var(--muted); letter-spacing: .02em; }
+@media (max-width: 680px) { .topbar-clock { display: none; } }
 .topbar-btn {
   position: relative; display: flex; align-items: center; justify-content: center;
   width: 38px; height: 38px; border-radius: 11px;
@@ -564,6 +568,11 @@ tbody tr:hover td { background: color-mix(in srgb, var(--neutral-bg) 55%, transp
 .dish-tile:active { transform: translateY(0) scale(0.99); }
 .dish-tile-img { width: 100%; height: 92px; background-color: var(--neutral-bg); background-size: cover; background-position: center; display:flex; align-items:center; justify-content:center; font-size:28px; }
 .dish-tile-body { padding: 8px 10px 10px; }
+/* Size grid rows to each tile's content and let the grid scroll. Without this,
+   the fixed-height grid distributes its height across `auto` rows — and because
+   .dish-tile uses overflow:hidden (0 automatic min-size), the rows collapse to a
+   few px once there are many items, hiding most of the menu. */
+#menuGrid { grid-auto-rows: max-content; }
 .dish-tile-name { font-size: 12.5px; font-weight: 600; line-height: 1.25; min-height: 32px; }
 .dish-tile-price { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent); font-weight: 700; margin-top: 4px; }
 .dish-tile-qty-badge {

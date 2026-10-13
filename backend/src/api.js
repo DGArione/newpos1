@@ -779,8 +779,8 @@ function handle(ctx) {
   }
   if (method === 'POST' && uri === '/tables') {
     requireRole(['superManager', 'manager'], user);
-    db.prepare('INSERT INTO tables_list (branchId,name,seats,qrToken) VALUES (?,?,?,?)')
-      .execute([bid, truncate(body.name || 'Table', 100), int(body.seats || 4), genTableToken()]);
+    db.prepare('INSERT INTO tables_list (branchId,name,seats,floor,qrToken) VALUES (?,?,?,?,?)')
+      .execute([bid, truncate(body.name || 'Table', 100), int(body.seats || 4), truncate(body.floor || '', 50), genTableToken()]);
     const id = db.lastInsertId();
     const f = db.prepare('SELECT * FROM tables_list WHERE id=?'); f.execute([id]);
     jsonOut(Object.assign({}, f.fetch(), { id, seats: int(body.seats || 4) }));
@@ -806,7 +806,7 @@ function handle(ctx) {
     const tId = int(params.id);
     if (method === 'PATCH' || method === 'PUT') {
       requireRole(['superManager', 'manager', 'server', 'cashier'], user);
-      const allowed = ['superManager', 'manager'].includes(user.role) ? ['name', 'seats', 'status'] : ['status'];
+      const allowed = ['superManager', 'manager'].includes(user.role) ? ['name', 'seats', 'status', 'floor'] : ['status'];
       const [sets, vals] = buildSet(body, allowed);
       if (sets) db.prepare(`UPDATE tables_list SET ${sets} WHERE id=?`).execute([...vals, tId]);
       const f = db.prepare('SELECT * FROM tables_list WHERE id=?'); f.execute([tId]);

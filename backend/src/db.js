@@ -420,6 +420,7 @@ function migrate() {
   // Add-on framework + customer loyalty balance.
   addCol('settings', 'enabledAddons', "TEXT DEFAULT '[]'");
   addCol('customers', 'loyaltyPoints', 'REAL DEFAULT 0');
+  addCol('tables_list', 'floor', "TEXT DEFAULT ''");   // optional floor/area label
   // Loyalty add-on configuration (points earning + redemption rates).
   addCol('settings', 'loyaltyEarnPoints', 'REAL DEFAULT 1');   // points earned …
   addCol('settings', 'loyaltyEarnPer', 'REAL DEFAULT 100');    // … per this much spent

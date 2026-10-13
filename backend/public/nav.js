@@ -730,6 +730,7 @@ async function renderNav(activeKey, user) {
 
     <header class="topbar" id="topbar">
       <div class="topbar-right">
+        <div id="topbarClock" class="topbar-clock" title="Current time"></div>
         <button id="quickClockBtn" class="topbar-btn" title="Clock in/out" aria-label="Clock in/out">
           <span id="quickClockIcon">${svgIcon("timeclock", 18)}</span><span id="quickClockLabel" class="sr-only">Clock In/Out</span>
         </button>
@@ -859,6 +860,22 @@ async function renderNav(activeKey, user) {
     document.addEventListener("webkitfullscreenchange", syncFs);
     syncFs();
   }
+
+  // Live top-bar clock (date + time)
+  (function startTopbarClock() {
+    if (window._gbClockTimer) clearInterval(window._gbClockTimer);
+    function tick() {
+      const el = document.getElementById("topbarClock");
+      if (!el) { if (window._gbClockTimer) { clearInterval(window._gbClockTimer); window._gbClockTimer = null; } return; }
+      const now = new Date();
+      const h = now.getHours(), m = String(now.getMinutes()).padStart(2, "0");
+      const ap = h < 12 ? "AM" : "PM", h12 = h % 12 === 0 ? 12 : h % 12;
+      const day = now.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+      el.innerHTML = `<span class="t">${h12}:${m} ${ap}</span><span class="d">${day}</span>`;
+    }
+    tick();
+    window._gbClockTimer = setInterval(tick, 20000);
+  })();
 
   const themeBtn = document.getElementById("themeToggleBtn");
   function syncThemeLabel() {

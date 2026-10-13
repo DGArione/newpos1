@@ -42,24 +42,46 @@ async function loadTables() {
 
 function render(tables, activeOrders = []) {
   gridEl.innerHTML = "";
+  const canManage = typeof isManagerRole === "function" && isManagerRole(staff);
+  const hasFloors = tables.some((t) => (t.floor || "").trim());
+
+  // Group tables by their floor/area label (first-seen order preserved).
+  const groups = new Map();
   tables.forEach((t) => {
-    const c = STATUS_COLOR[t.status] || STATUS_COLOR.open;
-    const order = activeOrders.find((o) => o.tableId === t.id);
-    const card = document.createElement("div");
-    card.className = "card clickable";
-    card.style = `padding:18px 14px; text-align:center; background:${c.bg}; border-left: 4px solid ${order && order.priority === "high" ? "var(--danger)" : c.fg};`;
-    card.innerHTML = `
-      <div style="font-weight:700; font-size:17px;">${order && order.priority === "high" ? "🔥 " : ""}${t.name}</div>
-      <div style="color:var(--muted); font-size:12px; margin:3px 0 9px;">${t.seats} seats</div>
-      <span class="badge badge-${t.status}">${t.status}</span>
-      ${order && order.kitchenTag ? `<div style="font-size:10px; color:var(--warning); margin-top:6px; font-weight:600;">⚠ ${order.kitchenTag.type}</div>` : ""}
-      ${t.qrToken ? `<button class="btn btn-sm qr-btn" data-qr="${t.id}" style="margin-top:9px; font-size:11px; padding:4px 10px;">QR menu</button>` : ""}
-    `;
-    card.onclick = (e) => { if (e.target.closest(".qr-btn")) return; handleClick(t); };
-    const qb = card.querySelector(".qr-btn");
-    if (qb) qb.onclick = (e) => { e.stopPropagation(); openTableQr(t); };
-    gridEl.appendChild(card);
+    const key = (t.floor || "").trim();
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(t);
   });
+
+  for (const [floor, list] of groups) {
+    if (hasFloors) {
+      const h = document.createElement("div");
+      h.style = "grid-column:1/-1; margin:10px 2px 0; font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.12em; font-size:12px; color:var(--accent-dark); font-weight:600;";
+      h.textContent = floor || "Unassigned";
+      gridEl.appendChild(h);
+    }
+    list.forEach((t) => {
+      const c = STATUS_COLOR[t.status] || STATUS_COLOR.open;
+      const order = activeOrders.find((o) => o.tableId === t.id);
+      const card = document.createElement("div");
+      card.className = "card clickable";
+      card.style = `position:relative; padding:18px 14px; text-align:center; background:${c.bg}; border-left: 4px solid ${order && order.priority === "high" ? "var(--danger)" : c.fg};`;
+      card.innerHTML = `
+        ${canManage ? `<button class="tbl-del" data-del="${t.id}" title="Delete table" style="position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; border:none; background:var(--danger-bg); color:var(--danger); cursor:pointer; font-size:13px; line-height:1; display:flex; align-items:center; justify-content:center;">×</button>` : ""}
+        <div style="font-weight:700; font-size:17px;">${order && order.priority === "high" ? "🔥 " : ""}${t.name}</div>
+        <div style="color:var(--muted); font-size:12px; margin:3px 0 9px;">${t.seats} seats</div>
+        <span class="badge badge-${t.status}">${t.status}</span>
+        ${order && order.kitchenTag ? `<div style="font-size:10px; color:var(--warning); margin-top:6px; font-weight:600;">⚠ ${order.kitchenTag.type}</div>` : ""}
+        ${t.qrToken ? `<button class="btn btn-sm qr-btn" data-qr="${t.id}" style="margin-top:9px; font-size:11px; padding:4px 10px;">QR menu</button>` : ""}
+      `;
+      card.onclick = (e) => { if (e.target.closest(".qr-btn") || e.target.closest(".tbl-del")) return; handleClick(t); };
+      const qb = card.querySelector(".qr-btn");
+      if (qb) qb.onclick = (e) => { e.stopPropagation(); openTableQr(t); };
+      const db = card.querySelector(".tbl-del");
+      if (db) db.onclick = (e) => { e.stopPropagation(); deleteTable(t); };
+      gridEl.appendChild(card);
+    });
+  }
 }
 
 async function handleClick(table) {
@@ -118,16 +140,29 @@ async function openChangeTableModal(table) {
 document.getElementById("addTableBtn").onclick = async () => {
   const name = document.getElementById("newTableName").value.trim();
   const seats = document.getElementById("newTableSeats").value;
+  const floor = document.getElementById("newTableFloor").value.trim();
   if (!name) return;
   await api("/api/tables", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, seats }),
+    body: JSON.stringify({ name, seats, floor }),
   });
   document.getElementById("newTableName").value = "";
   document.getElementById("newTableSeats").value = "";
+  document.getElementById("newTableFloor").value = "";
   loadTables();
 };
+
+// Delete a table (managers only). Exposed on each card in management mode.
+async function deleteTable(t) {
+  if (!confirm(`Delete "${t.name}"? This cannot be undone.`)) return;
+  const res = await api(`/api/tables/${t.id}`, { method: "DELETE" });
+  if (!res.ok) { toast("Could not delete table"); return; }
+  toast(`${t.name} deleted`);
+  _lastFloorHash = null;
+  loadTables();
+}
+window.deleteTable = deleteTable;
 
 // ── Table QR code (scan to order) ──
 function tableUrl(t) {

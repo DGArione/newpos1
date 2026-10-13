@@ -6,8 +6,10 @@
 const staff = requireLogin();
 if (staff) {
   renderNav("dashboard", staff);
-  document.getElementById("pageTitle").textContent =
-    staff.role === "superManager" ? "Dashboard" : `Dashboard`;
+  const _hr = new Date().getHours();
+  const _greet = _hr < 12 ? "Good morning" : _hr < 17 ? "Good afternoon" : "Good evening";
+  const _first = (staff.name || "").trim().split(/\s+/)[0] || "there";
+  document.getElementById("pageTitle").textContent = `${_greet}, ${_first}`;
   document.getElementById("dashSubtitle").textContent =
     (staff.role === "superManager" ? "All branches" : (staff.branch ? staff.branch.name : "")) + " · today";
 }
