@@ -1,0 +1,18 @@
+# dependencies
+**/node_modules/
+
+# next.js
+web/.next/
+web/out/
+web/build/
+
+# production backend data (SQLite db + signing secret)
+backend/data/*.db
+backend/data/*.db-*
+backend/data/secret.txt
+
+# misc
+.DS_Store
+*.log
+npm-debug.log*
+.env*.local
